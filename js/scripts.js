@@ -47,13 +47,25 @@ images[26] = img26;
 
 
 function init() {
+
 	
-	socket.emit('set nickname', prompt('Choisir un surnom'));
 	$('#chat form').submit(function(event){
-		socket.emit('message', $('#message').val());
-		$('#message').val('');
+		if($('#chat').hasClass('pseudo')){
+				socket.emit('set nickname', $('#pseudo').val());
+				$('#pseudo').val('');
+				$('#pseudo').attr({
+					'id' : 'message',
+					'name' : 'message',
+					'placeholder' : 'Votre message'
+				});
+				$(this).find('input[type=submit]').val('Envoyer');
+				$('#chat').removeClass('pseudo');
+		} else {
+			socket.emit('message', $('#message').val());
+			$('#message').val('');
+		}
 		event.preventDefault();
-	})
+	});
 	
 	canvas = document.getElementById('chess');
 	context = canvas.getContext('2d');

@@ -3,6 +3,8 @@ var app = require('express').createServer()
 
 	app.listen(9000);
 
+var cases, tourDesBlancs, blanc, noir;
+
 // Définition des liens
 app.get('/', function (req, res) {
   res.sendfile(__dirname + '/index.html');
@@ -53,20 +55,7 @@ app.get('/css/master.css', function (req, res) {
 	  res.sendfile(__dirname + '/img/26.png');
 	});
 	
-   var cases = [
-     ['22','23','24','25','26','24','23','22'],
-     ['21','21','21','21','21','21','21','21'],
-     ['0','0','0','0','0','0','0','0'],
-     ['0','0','0','0','0','0','0','0'],
-     ['0','0','0','0','0','0','0','0'],
-     ['0','0','0','0','0','0','0','0'],
-     ['11','11','11','11','11','11','11','11'],
-     ['12','13','14','15','16','14','13','12']
-   ];
-	var tourDesBlancs = true;
-	
-	var blanc = 0;
-	var noir = 0;
+	nouvellePartie();
 	
 	io.sockets.on('connection', function (socket) {
 		socket.set('couleur', '', function() {  });
@@ -115,26 +104,26 @@ app.get('/css/master.css', function (req, res) {
 			if(couleur == 'blanc' || couleur == 'noir') {
 				io.sockets.emit('response',{from:'server',data:'Le joueur qui controlait les '+couleur+'s est parti'});
 			}
-			if (couleur=='blanc') {blanc = 0;}
-			if (couleur=='noir') {noir = 0;}
+			if (couleur=='blanc') {blanc = 0; }
+			if (couleur=='noir') {noir = 0; }
 		});
-		
+	
 	}); // End of io.sockets.on('connection', ....);
 
 
 function nouvellePartie() {
-   var cases = [
-     ['22','23','24','25','26','24','23','22'],
-     ['21','21','21','21','21','21','21','21'],
-     ['0','0','0','0','0','0','0','0'],
-     ['0','0','0','0','0','0','0','0'],
-     ['0','0','0','0','0','0','0','0'],
-     ['0','0','0','0','0','0','0','0'],
-     ['11','11','11','11','11','11','11','11'],
-     ['12','13','14','15','16','14','13','12']
-   ];
-	var tourDesBlancs = true;
+	cases = [
+		['22','23','24','25','26','24','23','22'],
+		['21','21','21','21','21','21','21','21'],
+		['0','0','0','0','0','0','0','0'],
+		['0','0','0','0','0','0','0','0'],
+		['0','0','0','0','0','0','0','0'],
+		['0','0','0','0','0','0','0','0'],
+		['11','11','11','11','11','11','11','11'],
+		['12','13','14','15','16','14','13','12']
+	];
+	tourDesBlancs = true;
 	
-	var blanc = 0;
-	var noir = 0;
+	blanc = 0;
+	noir = 0;
 }
