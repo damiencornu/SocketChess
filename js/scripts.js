@@ -48,7 +48,7 @@ images[26] = img26;
 
 function init() {
 	
-	socket.emit('set nickname', prompt('What is your nickname?'));
+	socket.emit('set nickname', prompt('Choisir un surnom'));
 	$('#chat form').submit(function(event){
 		socket.emit('message', $('#message').val());
 		$('#message').val('');

@@ -67,13 +67,12 @@ app.get('/css/master.css', function (req, res) {
 	
 	var blanc = 0;
 	var noir = 0;
-	var nickname = "";
 	
 	io.sockets.on('connection', function (socket) {
 		
 		socket.on('set nickname', function (name) {
 			nickname = name;
-	   	socket.set('nickname', nickname, function () { 
+	   	socket.set('nickname', name, function () { 
 			socket.emit('response', {from:'server',data:'bienvenue '+ name}); });
 		});
 		socket.on('message', function (msg) {
@@ -84,14 +83,18 @@ app.get('/css/master.css', function (req, res) {
 		socket.emit('getBoard', {'cases':cases, 'tourDesBlancs': tourDesBlancs, 'blancPris': blanc, 'noirPris': noir});
 		socket.on('blancOk', function() {
 			blanc = 1;
-			nickname += ' (blanc)';
-			socket.set('nickname', nickname, function () {  });
+			socket.get('nickname', function (err, name) {
+				var nickname = name + ' (blanc)';
+				socket.set('nickname', nickname, function () {  });
+			});
 			io.sockets.emit('getBoard', {'cases':cases, 'tourDesBlancs': tourDesBlancs, 'blancPris': blanc, 'noirPris': noir});
 		});
 		socket.on('noirOk', function() {
 			noir = 1;
-			nickname += ' (noir)';
-			socket.set('nickname', nickname, function () {  });
+			socket.get('nickname', function (err, name) {
+				var nickname = name + ' (noir)';
+				socket.set('nickname', nickname, function () {  });
+			});
 			io.sockets.emit('getBoard', {'cases':cases, 'tourDesBlancs': tourDesBlancs, 'blancPris': blanc, 'noirPris': noir});
 		});
 		
