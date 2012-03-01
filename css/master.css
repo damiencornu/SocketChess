@@ -1,6 +1,6 @@
 /* ====== CSS ====== */
 body { width:1000px; height:100%; margin:0 auto; overflow:hidden; }
-h1 { color:red; text-align:center; }
+h1 { text-align:center; }
 #game, #chat { width:480px; float:left; padding:10px; }
 #chatMessages { height:400px; margin-top:10px; overflow-y:scroll;}
 #chatMessages p { margin: 0; }

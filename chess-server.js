@@ -69,11 +69,9 @@ app.get('/css/master.css', function (req, res) {
 	var noir = 0;
 	
 	io.sockets.on('connection', function (socket) {
-		
+		socket.set('couleur', '', function() {  });
 		socket.on('set nickname', function (name) {
-			nickname = name;
-	   	socket.set('nickname', name, function () { 
-			socket.emit('response', {from:'server',data:'bienvenue '+ name}); });
+			socket.set('nickname', name, function () {  });
 		});
 		socket.on('message', function (msg) {
 			socket.get('nickname', function (err, name) {
@@ -86,6 +84,7 @@ app.get('/css/master.css', function (req, res) {
 			socket.get('nickname', function (err, name) {
 				var nickname = name + ' (blanc)';
 				socket.set('nickname', nickname, function () {  });
+				socket.set('couleur', 'blanc', function() {  });
 			});
 			io.sockets.emit('getBoard', {'cases':cases, 'tourDesBlancs': tourDesBlancs, 'blancPris': blanc, 'noirPris': noir});
 		});
@@ -94,6 +93,7 @@ app.get('/css/master.css', function (req, res) {
 			socket.get('nickname', function (err, name) {
 				var nickname = name + ' (noir)';
 				socket.set('nickname', nickname, function () {  });
+				socket.set('couleur', 'noir', function() {  });
 			});
 			io.sockets.emit('getBoard', {'cases':cases, 'tourDesBlancs': tourDesBlancs, 'blancPris': blanc, 'noirPris': noir});
 		});
@@ -106,6 +106,24 @@ app.get('/css/master.css', function (req, res) {
 			cases = JSON.parse(cases);
 			tourDesBlancs = JSON.parse(tourDesBlancs);
 		}); // End of socket.on('sendDatas', ....);
+		
+		socket.on('disconnect', function () {
+			var couleur;
+			socket.get('couleur', function(err, color) {
+				couleur = color;
+			});
+			if(couleur == 'blanc' || couleur == 'noir') {
+				io.sockets.emit('response',{from:'server',data:'Le joueur qui controlait les '+couleur+'s est parti'});
+			}
+			if (couleur=='blanc') {blanc = 0;}
+			if (couleur=='noir') {noir = 0;}
+			
+			console.log("blanc : ");
+			console.log(blanc);
+			console.log("noir : ");
+			console.log(noir);
+			
+		});
 		
 	}); // End of io.sockets.on('connection', ....);
 
