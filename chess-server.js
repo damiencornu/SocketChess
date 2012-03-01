@@ -13,6 +13,9 @@ app.get('/js/scripts.js', function (req, res) {
 app.get('/js/jquery.min.js', function (req, res) {
   res.sendfile(__dirname + '/js/jquery.min.js');
 });
+app.get('/css/master.css', function (req, res) {
+  res.sendfile(__dirname + '/css/master.css');
+});
 	app.get('/img/11.png', function (req, res) {
 	  res.sendfile(__dirname + '/img/11.png');
 	});
@@ -64,16 +67,31 @@ app.get('/js/jquery.min.js', function (req, res) {
 	
 	var blanc = 0;
 	var noir = 0;
+	var nickname = "";
 	
 	io.sockets.on('connection', function (socket) {
 		
+		socket.on('set nickname', function (name) {
+			nickname = name;
+	   	socket.set('nickname', nickname, function () { 
+			socket.emit('response', {from:'server',data:'bienvenue '+ name}); });
+		});
+		socket.on('message', function (msg) {
+			socket.get('nickname', function (err, name) {
+				io.sockets.emit('response',{from:name,data:msg});
+			});
+		});
 		socket.emit('getBoard', {'cases':cases, 'tourDesBlancs': tourDesBlancs, 'blancPris': blanc, 'noirPris': noir});
 		socket.on('blancOk', function() {
 			blanc = 1;
+			nickname += ' (blanc)';
+			socket.set('nickname', nickname, function () {  });
 			io.sockets.emit('getBoard', {'cases':cases, 'tourDesBlancs': tourDesBlancs, 'blancPris': blanc, 'noirPris': noir});
 		});
 		socket.on('noirOk', function() {
 			noir = 1;
+			nickname += ' (noir)';
+			socket.set('nickname', nickname, function () {  });
 			io.sockets.emit('getBoard', {'cases':cases, 'tourDesBlancs': tourDesBlancs, 'blancPris': blanc, 'noirPris': noir});
 		});
 		

@@ -1,16 +1,27 @@
 <!DOCTYPE html>
 <html>
- <head>
- <script src="/js/jquery.min.js" type="text/javascript"></script>
- <script src="/socket.io/socket.io.js"></script>
- <script src="js/scripts.js" type="text/javascript"></script>
- <title>Échecs</title>
- </head>
- <body onload="init()">
-   <h1 style="margin:5px auto; width:400px;">Chess</h1>
-   <p id="select-team" style="margin:0 auto; width:400px;"></p>
-  <canvas id="chess" height="400" width="400" style="margin:10px auto 0; display:block"></canvas>
-  <p id="tour" style="margin:20px auto; display:block; width:400px;">Tour des <strong>blancs</strong></p>
-  <a href="#" id="saveBtn">zazaz</a>
- </body>
+   <head>
+      <script src="/js/jquery.min.js" type="text/javascript"></script>
+      <script src="/socket.io/socket.io.js"></script>
+      <script src="js/scripts.js" type="text/javascript"></script>
+      <link rel="stylesheet" href="/css/master.css" type="text/css" title="Master" charset="utf-8" />
+      <title>Échecs</title>
+   </head>
+   <body onload="init()">
+      <h1>Chess</h1>
+      <div id="game">
+         <p id="select-team"></p>
+         <canvas id="chess" height="400" width="400"></canvas>
+         <p id="tour">Tour des <strong>blancs</strong></p>
+      </div><!-- end of #game -->
+      <div id="chat">
+         <h2>Chat</h2>
+         <form action="#">
+            <input type="text" name="message" placeholder="Tapez votre message ici" id="message" />
+            <input type="submit" value="Envoyer" />
+         </form>
+         <div id="chatMessages"></div>
+      </div>
+      
+   </body>
 </html>

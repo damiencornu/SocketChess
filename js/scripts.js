@@ -47,6 +47,14 @@ images[26] = img26;
 
 
 function init() {
+	
+	socket.emit('set nickname', prompt('What is your nickname?'));
+	$('#chat form').submit(function(event){
+		socket.emit('message', $('#message').val());
+		$('#message').val('');
+		event.preventDefault();
+	})
+	
 	canvas = document.getElementById('chess');
 	context = canvas.getContext('2d');
 
@@ -103,40 +111,7 @@ function init() {
 
 	} // fin des actions au clic
 
-	$('#saveBtn').click(function() {
-		saveCanvas(canvas, '/test/image.png');
-	})
-
 } //init()
-
-function saveCanvas(canvas, destFile) {
-  // convert string filepath to an nsIFile
-  var file = Components.classes["@mozilla.org/file/local;1"]
-                       .createInstance(Components.interfaces.nsILocalFile);
-  file.initWithPath(destFile);
-
-  // create a data url from the canvas and then create URIs of the source and targets  
-  var io = Components.classes["@mozilla.org/network/io-service;1"]
-                     .getService(Components.interfaces.nsIIOService);
-  var source = io.newURI(canvas.toDataURL("image/png", ""), "UTF8", null);
-  var target = io.newFileURI(file)
-    
-  // prepare to save the canvas data
-  var persist = Components.classes["@mozilla.org/embedding/browser/nsWebBrowserPersist;1"]
-                          .createInstance(Components.interfaces.nsIWebBrowserPersist);
-  
-  persist.persistFlags = Components.interfaces.nsIWebBrowserPersist.PERSIST_FLAGS_REPLACE_EXISTING_FILES;
-  persist.persistFlags |= Components.interfaces.nsIWebBrowserPersist.PERSIST_FLAGS_AUTODETECT_APPLY_CONVERSION;
-  
-  // displays a download dialog (remove these 3 lines for silent download)
-  var xfer = Components.classes["@mozilla.org/transfer;1"]
-                       .createInstance(Components.interfaces.nsITransfer);
-  xfer.init(source, target, "", null, null, null, persist);
-  persist.progressListener = xfer;
-  
-  // save the canvas data to the file
-  persist.saveURI(source, null, null, null, null, file);
-}
 
 function drawBoard() {
 	for(var i=0; i<64; i++) {
@@ -516,3 +491,7 @@ socket.on('updateClient',function(data) {
 	drawPions();
 	getTour();
 });
+
+socket.on('response', function(data){
+	$('#chatMessages').prepend('<p><strong>'+data.from+' :</strong> '+data.data);
+})
