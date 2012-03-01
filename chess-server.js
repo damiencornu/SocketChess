@@ -117,12 +117,6 @@ app.get('/css/master.css', function (req, res) {
 			}
 			if (couleur=='blanc') {blanc = 0;}
 			if (couleur=='noir') {noir = 0;}
-			
-			console.log("blanc : ");
-			console.log(blanc);
-			console.log("noir : ");
-			console.log(noir);
-			
 		});
 		
 	}); // End of io.sockets.on('connection', ....);
